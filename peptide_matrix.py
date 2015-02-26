@@ -186,21 +186,28 @@ class PeptideMatrix:
 		# less empty slots
 		tmpN = N
 		tmpM = M
-		size = tmpN * tmpM
+		gap = tmpN * tmpM - total
 		for x in range(10):
 			# Decrease lines and increase columns until we find the size that is
 			# the closest to our number of peptides
 			tmpN -= 1
 			tmpM += 1
-			newSize = tmpN * tmpM
+
+			# Check if last line is empty
+			emptySlots = tmpN * tmpM - total
+			if (emptySlots >= tmpM):
+				tmpN -= 1
+
+			size = tmpN * tmpM
+			newGap = size - total
 			# If a better size is found, swap values
 			# else, we already found the closest match, so we return it
-			if newSize >= total and newSize < size:
+			if newGap < gap and size >= total:
 				N = tmpN
 				M = tmpM
-				size = newSize
+				gap = newGap
 			else:
-				return (N,M)
+				return(N,M)
 
 	# Read a matrix and recreate it with a better size
 	def remap(self):
